@@ -3,6 +3,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJson from './swagger.json';
 import bcrypt from 'bcrypt';
+import cors from 'cors';
 const app = express();
 app.use(express.json());
 
@@ -14,6 +15,8 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 app.get('/welcome', (req: Request, res: Response, next: NextFunction) => {
   res.send('welcome!');
 });
+//cors 허용
+app.use(cors());
 
 // json으로 된 swagger 연동
 app.use('/api-json', swaggerUi.serve, swaggerUi.setup(swaggerJson));
@@ -38,7 +41,7 @@ app.post(`/signup`, async (req: Request, res: Response) => {
     data: {
       name,
       email,
-      password,
+      password:hashedPW,
       posts: {
         create: postData,
       },
