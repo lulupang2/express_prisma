@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { Prisma, PrismaClient } from '@prisma/client';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJson from './swagger.json';
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 const app = express();
 app.use(express.json());
 
@@ -19,9 +19,12 @@ app.get('/welcome', (req: Request, res: Response, next: NextFunction) => {
 app.use('/api-json', swaggerUi.serve, swaggerUi.setup(swaggerJson));
 
 // 가입 post 요청
+app.use(function (req: Request, res: Response, next: NextFunction, err?: any) {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 
 app.post(`/signup`, async (req: Request, res: Response) => {
-  
   const { name, email, password, posts } = req.body;
   const saltRound = 10;
   const salt = await bcrypt.genSalt(saltRound);
@@ -35,7 +38,7 @@ app.post(`/signup`, async (req: Request, res: Response) => {
     data: {
       name,
       email,
-      password : hashedPW,
+      password,
       posts: {
         create: postData,
       },
