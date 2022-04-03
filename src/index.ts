@@ -1,14 +1,24 @@
-import { Context } from 'koa';
+import express, { Request, Response, NextFunction } from 'express';
 
-const Koa = require('koa');
+const app = express();
 
-const app = new Koa();
 
-app.use((ctx: Context) => {
-  ctx.body = 'hello, Jacob!';
+app.get('/', (req: Request, res: Response, next: NextFunction) => {
+    res.send('index page');
 });
 
-app.listen(555, () => {
-    console.log('Server running at: http://localhost:555')
+app.get('/welcome', (req: Request, res: Response, next: NextFunction) => {
+    res.send('welcome!');
+});
+import swaggerUi from 'swagger-ui-express'
+// json 파일을 바로 불러오기
+import swaggerJson from './swagger.json'
 
+// json으로 된 swagger 연동
+app.use('/api-json', swaggerUi.serve, swaggerUi.setup(swaggerJson))
+
+
+
+app.listen(555, () => {
+  console.log('Server running at: http://localhost:555');
 });

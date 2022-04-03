@@ -17,10 +17,19 @@ model Note {
   updatedAt DateTime @updatedAt
 }
 model User {
+  id    Int     @default(autoincrement()) @id
+  name  String?
+  email String  @unique
+  posts Post[]
+}
+model Post {
   id        Int      @id @default(autoincrement())
-  name     String   @db.VarChar(255)
-  email     String   @db.VarChar(255)
   createdAt DateTime @default(now())
-  password     String   @db.VarChar(255)
-  
+  updatedAt DateTime @updatedAt
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  viewCount Int      @default(0)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
 }
