@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { Prisma, PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import morgan from 'morgan';
+import connectWithACLUser from './util/redis';
 const app = express();
 const prisma = new PrismaClient();
 
@@ -47,6 +48,7 @@ app.get('/skip', (요청:Request,응답:Response) => {
 console.log('success');
 응답.writeHead(200, {'Content-type': 'text/html'});
 응답.end('success!!')
+connectWithACLUser();
 
 });
 
@@ -55,7 +57,6 @@ const myMorgan = morgan('combined', {
   skip: (요청:Request,응답:Response) => 응답.statusCode < 400
 });
 app.use(myMorgan)
-
 //내가 쓰는 포트
 app.listen(555, () => {
   console.log('Server running at: http://localhost:555');
